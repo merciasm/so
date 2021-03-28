@@ -1,6 +1,14 @@
 {
     "files.associations": {
         "stdlib.h": "c",
-        "pthread.h": "c"
+        "pthread.h": "c",
+        "__config": "c",
+        "__hash_table": "c",
+        "__node_handle": "c",
+        "cstdlib": "c",
+        "optional": "c",
+        "unordered_map": "c",
+        "iterator": "c",
+        "string.h": "c"
     }
 }

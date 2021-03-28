@@ -1,13 +1,13 @@
-#include "./clothing.c"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include "./clothing.c"
 
 typedef struct node {
     clothing *clothing;
-    int key;
+    int id;
     struct node *next;
 
 } Node;
@@ -18,15 +18,16 @@ typedef struct list {
 } List;
 
 
-Node *createnode(clothing *clothing, int key) {
+Node *createnode(clothing *clothing, int id) {
     Node *newNode = malloc(sizeof(Node));
 
-    if (!newNode) {
+    if(newNode == NULL){
+        fprintf(stderr, "Error: not enough memory.\n");
         return NULL;
     }
 
     newNode->clothing = clothing;
-    newNode->key = key;
+    newNode->id = id;
     newNode->next = NULL;
     return newNode;
 }
@@ -41,63 +42,55 @@ List *makelist() {
 }
 
 void display(List *list) {
-    Node *current = list->head;
-    if (list->head == NULL)
-        return;
 
-    for (; current != NULL; current = current->next) {
+    Node *current = list->head;
+
+    while (current != NULL)
+    {
         printf("%s\n", current->clothing->kind);
+        current = current->next;
     }
 }
 
-void add(int key, clothing *clothing, List *list) {
+void add(int id, clothing *clothing, List *list) {
     Node *current = NULL;
     if (list->head == NULL) {
-        list->head = createnode(clothing, key);
+        list->head = createnode(clothing, id);
     } else {
         current = list->head;
         while (current->next != NULL) {
             current = current->next;
         }
-        current->next = createnode(clothing, key);
+        current->next = createnode(clothing, id);
     }
     list->size++;
 }
 
-void delete(clothing *clothing, List *list) {
-    Node *current = list->head;
-    Node *previous = current;
-    while (current != NULL) {
-        if (current->clothing == clothing) {
-            previous->next = current->next;
-            if (current == list->head)
-                list->head = current->next;
+void delete(clothing *clothing, List *list) {  
+    Node *tmp = list->head;
+    Node *previous = tmp;
+    while (tmp != NULL) {
+        if (tmp->clothing == clothing) {    
+            previous->next = tmp->next;
+            if (tmp == list->head)
+                list->head = tmp->next;
             list->size--;
             return;
         }
-        previous = current;
-        current = current->next;
+        previous = tmp;
+        tmp = tmp->next;
     }
 }
 
-Node *getAt(int key, List *list) {
+Node *getAt(int id, List *list) { 
     Node *current = list->head;
     int count = 1;
     while (current != NULL) {
-        if (count == key) {
+        if (count == id) {
             return current;
         }
         count++;
         current = current->next;
     }
     return NULL;
-}
-
-clothing *clothing_new(int id, char *kind, float price, char *size) {
-    clothing *new_clothing = malloc(sizeof(clothing));
-    new_clothing->code = id;
-    strcpy(new_clothing->kind, kind);
-    new_clothing->price = price;
-    strcpy(new_clothing->size, size);
-    return new_clothing;
 }
