@@ -1,9 +1,4 @@
-#include <stdio.h>
 #include "./linkedList.c"
-#include <string.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <unistd.h>
 
 #define NUM_THREADS 8
 
